@@ -85,13 +85,11 @@ void PatriciaTrieRoot<T>::add(T value){
  
 template<typename T>
 PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value){
-	PatriciaTrie<T> * current = 0;
 	PatriciaTrie<T> * next = start;
 	if(start!=0){
 		int prev_depth = 0;
 		int next_depth = next->k->index;
 		while(prev_depth < next_depth){
-			current = next;
 			if(value[next_depth-1]=='0')
 				next = &next->k->left;
 			else
@@ -106,13 +104,11 @@ PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value){
  
 template<typename T>
 PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value, int & depth){
-	PatriciaTrie<T> * current = 0;
 	PatriciaTrie<T> * next = start;
 	if(start!=0){
 		int prev_depth = 0;
 		int next_depth = next->k->index;
 		while(prev_depth < next_depth && depth > next_depth){
-			current = next;
 			if(value[next_depth-1]=='0')
 				next = &next->k->left;
 			else
