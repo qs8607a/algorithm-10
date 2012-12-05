@@ -37,7 +37,7 @@ class PatriciaTrieRoot {
 		PatriciaTrieRoot():start(0),extra(0){};
 		void add(T);
 		PatriciaTrie<T> * search(T);
-		PatriciaTrie<T> * search(T, int&, PatriciaTrie<T> *&);
+		PatriciaTrie<T> * search(T, int&);
 		PatriciaTrie<T> * start;
 		Node<T> * extra;
 };
@@ -68,8 +68,7 @@ void PatriciaTrieRoot<T>::add(T value){
 		int depth = 1;
 		while(depth <= value.size() && value[depth-1] == current->k->key[depth-1])
 			depth++;
-		PatriciaTrie<T> * next = 0;
-		PatriciaTrie<T> * adding = search(value,depth, next);
+		PatriciaTrie<T> * next = search(value,depth);
 		Node<T> * newnode = new Node<T>(value,depth);
 		if(value[depth-1] == '0'){
 			newnode->right.k = next->k;
@@ -106,9 +105,9 @@ PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value){
  
  
 template<typename T>
-PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value, int & depth, PatriciaTrie<T> *& next){
+PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value, int & depth){
 	PatriciaTrie<T> * current = 0;
-	next = start;
+	PatriciaTrie<T> * next = start;
 	if(start!=0){
 		int prev_depth = 0;
 		int next_depth = next->k->index;
@@ -122,7 +121,7 @@ PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value, int & depth, PatriciaTrie
 			next_depth = next->k->index;
 		}
 	}
-	return current;
+	return next;
 }
  
 int main(){
