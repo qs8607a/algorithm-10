@@ -4,6 +4,19 @@
 #include <ctype.h>
 #include <bitset>
 
+//---------------------------------------------
+//
+//
+//	Patricia Trie by cedricve.me
+//
+//
+//---------------------------------------------
+
+/*
+
+	Char to byte convertor
+
+*/
 class byte {
 public:
 	std::string getByte(char);
@@ -19,6 +32,12 @@ std::string byte::getByte(char c) {
 int byte::alpha_index(char c) {
 	return c - 'a' + 1;
 }
+
+/*
+
+	Patricia Trie
+	
+*/
 
 template<typename T>
 class PatriciaTrie;
@@ -155,6 +174,12 @@ void PatriciaTrie<T>::inorder(std::map<std::string,std::string> & keys, int i){
 	}
 }
 
+/*
+
+
+Run
+
+*/
 int main(){
 	PatriciaTrieRoot<std::string> start;
 	std::map<std::string,std::string> keys;
