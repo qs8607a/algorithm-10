@@ -1,6 +1,24 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <ctype.h>
+#include <bitset>
+
+class byte {
+public:
+	std::string getByte(char);
+	int alpha_index(char);
+};
+
+std::string byte::getByte(char c) {
+	int alpha = alpha_index(tolower(c));
+	std::bitset<5> mybits = std::bitset<5>(alpha);
+	return mybits.to_string<char,std::char_traits<char>,std::allocator<char> >();
+}
+
+int byte::alpha_index(char c) {
+	return c - 'a' + 1;
+}
 
 template<typename T>
 class PatriciaTrie;
@@ -27,6 +45,7 @@ template<typename T>
 class PatriciaTrie {
 	public:
 		PatriciaTrie():k(0){};
+		void inorder(std::map<std::string,std::string> &, int);
 		Node<T> * k;
 };
 
@@ -38,6 +57,7 @@ class PatriciaTrieRoot {
 		void add(T);
 		PatriciaTrie<T> * search(T);
 		PatriciaTrie<T> * search(T, int&);
+		void inorder(std::map<std::string,std::string> &);
 		PatriciaTrie<T> * start;
 		Node<T> * extra;
 };
@@ -119,36 +139,40 @@ PatriciaTrie<T> * PatriciaTrieRoot<T>::search(T value, int & depth){
 	}
 	return next;
 }
- 
+
+template<typename T>
+void PatriciaTrieRoot<T>::inorder(std::map<std::string,std::string> & keys){
+	int i = 0;
+	start->inorder(keys,i);
+}
+
+template<typename T>
+void PatriciaTrie<T>::inorder(std::map<std::string,std::string> & keys, int i){
+	if(k!=0 && ( i < k->getIndex() ||  k->getIndex() == 0) ){
+		k->left.inorder(keys,k->getIndex());
+		std::cout << keys[k->getKey()];
+		k->right.inorder(keys,k->getIndex());
+	}
+}
+
 int main(){
 	PatriciaTrieRoot<std::string> start;
 	std::map<std::string,std::string> keys;
 	
-	keys["00001"] = "A";
-	keys["10011"] = "S";
-	keys["00101"] = "E";
-	keys["10010"] = "R";
-	keys["00011"] = "C";
-	keys["01000"] = "H";
+	byte b;
+	keys[b.getByte('a')] = "a";
+	keys[b.getByte('s')] = "s";
+	keys[b.getByte('e')] = "e";
+	keys[b.getByte('z')] = "z";
+	keys[b.getByte('q')] = "q";
 
-	start.add("00001");
-	start.add("10011");
-	start.add("00101");
-	start.add("10010");
-	start.add("00011");
-	start.add("01000");
+	start.add(b.getByte('a'));
+	start.add(b.getByte('s'));
+	start.add(b.getByte('e'));
+	start.add(b.getByte('z'));
+	start.add(b.getByte('q'));
+
+	start.inorder(keys);
 	
-	// Right @ Root there is R
-	std::cout << keys[start.start->k->right.k->getKey()] << std::endl;
-	// @ Root there is S
-	std::cout << keys[start.start->k->getKey()] << std::endl;
-	// Left @ Root there is H
-	std::cout << keys[start.start->k->left.k->getKey()] << std::endl;
-	// Left @ H there is E
-	std::cout << keys[start.start->k->left.k->left.k->getKey()] << std::endl;
-	// Left @ E there is C
-	std::cout << keys[start.start->k->left.k->left.k->left.k->getKey()] << std::endl;
-	// Left @ C there is A
-	std::cout << keys[start.start->k->left.k->left.k->left.k->left.k->getKey()] << std::endl;
 	return 0;
 }
