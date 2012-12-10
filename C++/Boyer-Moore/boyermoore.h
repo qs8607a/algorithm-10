@@ -12,6 +12,7 @@ public:
 	int wrong_char(int i, int j, uchar k);
 	int wrong_char_expanded(int i, int j, uchar k);
 	int wrong_horspool(int i, int j, uchar k);
+	int good_suffix(int j);
 private:
 	vector<int> prepare;
 	vector<vector<int> > prepare_exp;
@@ -40,6 +41,17 @@ BoyerMoore::BoyerMoore(const uchar* _prefix,uint _prefixlength):prefixlength(_pr
 			if(i == prefix[j])
 				for(uint f = j; f < _prefixlength; f++)
 			  	  prepare_exp[i][f] = j+1;
+
+	suffix.resize(_prefixlength,0);
+
+	for(int i = _prefixlength-2; i >= 0; --i) {
+		uint j = suffix[i+1];
+		while(j>0 && prefix[_prefixlength-1-j] != prefix[i])
+			j = suffix[_prefixlength-j]; 
+		if(prefix[_prefixlength-1-j] == prefix[i])
+			j = j+1;
+		suffix[i] = j;
+	}
 }
  
 int BoyerMoore::wrong_char(int i, int j, uchar k){
@@ -60,6 +72,10 @@ int BoyerMoore::wrong_horspool(int i, int j, uchar k){
 	int jump = prefixlength - prepare[k];
 	return jump;
 }
+
+int BoyerMoore::good_suffix(int j){
+	return suffix[j]+1;
+}
  
 void BoyerMoore::search(queue<const uchar*>& store,const uchar* text, uint textlength){
  
@@ -69,20 +85,21 @@ void BoyerMoore::search(queue<const uchar*>& store,const uchar* text, uint textl
 	int i = 0;
 	int count = 0;
 	int count_loops = 0;
-	int d1; int d2; int d3;
+	int d1;  int d3;
 	int k;
  
 	while(i < n-m+1){
-		k=1;&
+		k=1;
 		int j = m-1;
 		bool good = true;
 		while(j >= 0 && good){
 			count_loops++;
 			if(text[i+j]!=prefix[j]){
 				d1 = wrong_char(i,j,text[i+j]);
-				d2 = wrong_char_expanded(i,j,text[i+j]);
-				d3 = wrong_horspool(i,j,text[i+m]);
-				k = max(max(d1,d2),d3);
+				//d2 = wrong_char_expanded(i,j,text[i+j]);
+				//d3 = wrong_horspool(i,j,text[i+m]);
+				d3 = good_suffix(j);
+				k = max(d1,d3);
 				good = false;
 			}
 			else
