@@ -11,8 +11,8 @@ int main(){
 		cerr << "not ok";
 		return 1;
 	}
-	string pref = "God";
-	const uchar prefix[]  =  "God";
+	string pref = "Jesus";
+	const uchar prefix[]  =  "Jesus";
 	BoyerMoore bm(prefix,pref.size());
 	stringstream buffer;
 	buffer << reader.rdbuf();
@@ -20,5 +20,6 @@ int main(){
 	const uchar * text = (uchar *) str.c_str();
 	queue<const uchar*> store;
 	bm.search(store,text,str.size());
+
 	return 0;
 }
