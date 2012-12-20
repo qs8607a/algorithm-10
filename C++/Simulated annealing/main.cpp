@@ -5,8 +5,8 @@ using namespace std;
 int main(){
 	int x = 100000;
 	int y = 100000;
-	SimulatedAnnealing_Impl<pair<int,int> > sa(x,y,120);
-	pair<int,int> * s;
+	SimulatedAnnealing_Impl<pair<int,int> > sa(x,y,0.15);
+	pair<int,int> * s; // 7615644
 	cout << "Run forrest, run!" << endl;
 	s = sa.newOplossing();
 	cout << "x: " << s->first << " y: " << s->second << endl;

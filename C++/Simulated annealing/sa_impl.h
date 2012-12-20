@@ -8,8 +8,9 @@ using namespace std;
 template <class S>
 class SimulatedAnnealing_Impl : public SimulatedAnnealing<S> {
 public:
-	SimulatedAnnealing_Impl(int x, int y, int k0);
-    double T;//temperatuur;
+	SimulatedAnnealing_Impl(int x, int y, double ea_solution);
+	SimulatedAnnealing_Impl(int x, int y, double ea_solution, int k0);
+    double T;//temperatuur
     S *s;//voorlopige en eindoplossing.
     double T0();//initi"ele temperatuur
     bool terminateCond();//true als stoppen met zoeken
@@ -41,10 +42,20 @@ private:
 	int x,y;
 	int k0;
 	int k;
+	double ea_solution;
 };
 
 template <class S>
-SimulatedAnnealing_Impl<S>::SimulatedAnnealing_Impl(int x, int y, int k0):x(x),y(y),k0(k0),k(1){}
+SimulatedAnnealing_Impl<S>::SimulatedAnnealing_Impl(int x, int y, double ea_solution)
+	:x(x),y(y),k0(0),k(1),ea_solution(ea_solution){}
+
+template <class S>
+SimulatedAnnealing_Impl<S>::SimulatedAnnealing_Impl(int x, int y, double ea_solution, int k0)
+	:x(x),y(y),k(1),ea_solution(ea_solution){
+		this->k0 = k0;
+		if(k0<=0)
+			this->k0 = 1;
+	}
 
 template <class S>
 double SimulatedAnnealing_Impl<S>::T0(){
@@ -53,14 +64,16 @@ double SimulatedAnnealing_Impl<S>::T0(){
 
 template <class S>
 bool SimulatedAnnealing_Impl<S>::terminateCond(){
-	return f(*s)<=0.2;
+	return f(*s)<=ea_solution;
 }
 
 template <class S>
 void SimulatedAnnealing_Impl<S>::updateT(){
 	k++;
-	//T = T/log(k+k0); // => to slow
-	T *= ((double) rand() / (RAND_MAX)); // better 
+	if(k0!=0)
+		T = T/log(k+k0); // to slow
+	else
+		T *= ((double) rand() / (RAND_MAX)); // better 
 }
 
 template <class S>
