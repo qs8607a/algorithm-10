@@ -18,6 +18,7 @@ public:
     S* newpickAtRandom(const S*);
     double p(double T, double deltaf);//probabiliteit verandering
     void updateT();
+	
     S* newOplossing(){
         T=T0();
         s=newInitialSolution();
@@ -58,7 +59,8 @@ bool SimulatedAnnealing_Impl<S>::terminateCond(){
 template <class S>
 void SimulatedAnnealing_Impl<S>::updateT(){
 	k++;
-	T = T/log(k+k0);
+	//T = T/log(k+k0); // => to slow
+	T *= ((double) rand() / (RAND_MAX)); // better 
 }
 
 template <class S>
